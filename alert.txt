@@ -1,0 +1,48 @@
+=======================alert file ===================
+
+<link rel="stylesheet" type="text/css" href="{{ asset('/public/babckend/assets/vendor_component/toastr/toastr.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('/public/babckend/assets/vendor_component/sweetalert/sweetalert.css') }}">
+
+<script type="text/js" src="{{ asset('public/backend/plugins/toastr/toastr.min.js') }}"></script>
+<script type="text/js" src="{{ asset('public/backend/plugins/sweetalert/sweetalert.min.js') }}"></script>
+
+<script>
+    $(document).on("click", "#delete", function (e) {
+        e.preventDefault();
+        var link = $(this).attr("href");
+        swal({
+            title: "Are you want to delete?",
+            text: "Once Delete, This will be Permanently Delete!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) =>{
+            if (willDelete){
+                window.location.href = link;
+            }else {
+                swal("Safe Data!")
+            }
+        });
+    });
+</script>
+
+<script>
+    @if(Session::has('messege'))
+        var type="{{ Session::get('alert-tyype', 'info) }}"
+        switch (type){
+            case 'info':
+                toastr.info("{{ Session::get('messege') }}");
+                break;
+            case 'success':
+                toastr.success(" {{Session::get('message') }}");
+                break;
+            case 'warning':
+                toastr.warning(" {{Session::get('message') }}");
+                break;
+            case 'error':
+                toastr.error(" {{Session::get('message') }}");
+                break;
+        }
+        @endif
+</script>
