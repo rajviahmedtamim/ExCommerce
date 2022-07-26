@@ -47,14 +47,16 @@ class LoginController extends Controller
             'password' => 'required',
         ]);
 
-        if (Auth::attempt(['email'=>$request->email,'password'=>$request->password])){
+        if (auth()->attempt(['email'=>$request->email,'password'=>$request->password])){
             if (auth()->user()->is_admin==1){
                 return redirect()->route('admin.home');
             }else{
-                return redirect()->route('home');
+//                return redirect()->route('home');
+                return redirect()->back();
             }
         }else{
-            return redirect()->route('login')->with('error','Invalid enail or password');
+//            return redirect()->route('login')->with('error','Invalid mail or password');
+            return redirect()->back()->with('error','Invalid email or password');
         }
     }
 

@@ -43,7 +43,7 @@ class AdminController extends Controller
             $user=User::findorfail(Auth::id());     //current user data get
             $user->password=Hash::make($request->password);     //current user password hashing
             $user->save();  //FINALLY SAVE THE password
-            Auth::logout(); //logout the admin user and redirect admn login panel
+            Auth::logout(); //logout the admin user and redirect admin login panel
             $notification=array('messege' => 'Yyour Password Changed!', 'alert-type' => 'success');
             return redirect()->route('admin.login')->with($notification);
         }else{

@@ -19,7 +19,7 @@ class IsAdmin
         if (auth()->user()->is_admin==1){
             return $next($request);
         }
-        return redirect()->route('home')->with('error',"Youu can;t access the admin area");
+        return redirect()->route('home')->with('error',"You can't access the admin area");
 
     }
 }

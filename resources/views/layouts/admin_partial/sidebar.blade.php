@@ -8,7 +8,7 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <!-- Sidebar user panel (optional) -->
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="user-panel pb-3 mb-3 d-flex">
             <div class="image">
                 <img src="https://static.vecteezy.com/system/resources/previews/004/477/337/non_2x/face-young-man-in-frame-circular-avatar-character-icon-free-vector.jpg"  class="img-circle elevation-2">
             </div>
@@ -60,6 +60,48 @@
                             <a href="{{ route('brand.index') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Brand</p>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-copy"></i>
+                        <p>
+                            Settings
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('seo.setting') }}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>SEO Settings</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('childcategory.index') }}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Website Setting</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('page.index') }}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Page Create</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('smtp.setting') }}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>SMTP Setting</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('brand.index') }}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Payment Gateway</p>
                             </a>
                         </li>
 
