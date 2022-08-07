@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Image;
 
 class SettingController extends Controller
 {
@@ -50,4 +51,46 @@ class SettingController extends Controller
         $notification=array('messege' => 'SMTP Setting Updated!', 'alert-type' => 'success');
         return redirect()->back()->with($notification);
     }
+    //website Setting
+    public function website(){
+        $setting=DB::table('settings')->first();
+        return view('admin.setting.website_setting',compact('setting'));
+    }
+    //website setting Update
+    public function websiteUpdate(Request $request,$id){
+        $data=array();
+        $data['currency']=$request->currency;
+        $data['phone_one']=$request->phone_one;
+        $data['phone_two']=$request->phone_two;
+        $data['main_email']=$request->main_email;
+        $data['support_email']=$request->support_email;
+        $data['address']=$request->address;
+        $data['facebook']=$request->facebook;
+        $data['twitter']=$request->twitter;
+        $data['instagram']=$request->instagram;
+        $data['linkedin']=$request->linkedin;
+        $data['youtube']=$request->youtube;
+
+        if($request->logo){ //jodi new logo die hake
+            $logo=$request->logo;
+            $logo_name=uniqid().'.'.$logo->getClientOriginalExtension();
+            Image::make($logo)->resize(320,120)->save('public/files/setting/'.$logo_name);
+            $data['logo']='public/files/setting/'.$logo_name;
+        }else{ //jodi new logo na dei
+            $data['logo']=$request->old_logo;
+        }
+
+        if($request->favicon){ //jodi new logo die hake
+            $favicon=$request->favicon;
+            $favicon_name=uniqid().'.'.$favicon->getClientOriginalExtension();
+            Image::make($favicon)->resize(32,32)->save('public/files/setting/'.$favicon_name);
+            $data['favicon']='public/files/setting/'.$favicon_name;
+        }else{ //jodi new logo na dei
+            $data['favicon']=$request->old_favicon;
+        }
+        DB::table('settings')->where('id',$id)->update($data);
+        $notification=array('messege' => 'Setting Updated!', 'alert-type' => 'success');
+        return redirect()->back()->with($notification);
+    }
+
 }

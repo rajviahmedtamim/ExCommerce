@@ -47,11 +47,11 @@
         <!-- Content Wrapper. Contains page content -->
         @yield('admin_content')
 
-        <!-- Control Sidebar -->
-            <aside class="control-sidebar control-sidebar-dark">
-                <!-- Control sidebar content goes here -->
-            </aside>
-            <!-- /.control-sidebar -->
+{{--        <!-- Control Sidebar -->--}}
+{{--            <aside class="control-sidebar control-sidebar-dark">--}}
+{{--                <!-- Control sidebar content goes here -->--}}
+{{--            </aside>--}}
+{{--            <!-- /.control-sidebar -->--}}
 
         </div>
 </div>
@@ -59,7 +59,6 @@
 
 <!-- REQUIRED SCRIPTS -->
 <!-- jQuery -->
-
 <script src="{{ asset('public/backend') }}/plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap -->
 <script src="{{ asset('public/backend') }}/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -76,10 +75,8 @@
 <script src="{{ asset('public/backend') }}/plugins/jquery-mapael/maps/usa_states.min.js"></script>
 <!-- ChartJS -->
 <script src="{{ asset('public/backend') }}/plugins/chart.js/Chart.min.js"></script>
-
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{ asset('public/backend/dist/js/pages/dashboard2.js') }}"></script>
-
 <script type="text/javascript" src="{{ asset('public/backend/plugins/toastr/toastr.min.js') }}"></script>
 <script src="{{ asset('public/backend/plugins/sweetalert/sweetalert.min.js') }}"></script>
 
@@ -145,7 +142,6 @@
     }
     @endif
 </script>
-
 <script src="{{ asset('public/backend') }}/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="{{ asset('public/backend') }}/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
 <script src="{{ asset('public/backend') }}/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
@@ -158,7 +154,6 @@
 <script src="{{ asset('public/backend') }}/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 <script src="{{ asset('public/backend') }}/plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="{{ asset('public/backend') }}/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script src="http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
 <script src="//cdn.ckeditor.com/4.16.0/full/ckeditor.js"></script>
