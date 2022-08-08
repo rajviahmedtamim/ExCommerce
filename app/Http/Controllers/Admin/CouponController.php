@@ -48,7 +48,7 @@ class CouponController extends Controller
         return response()->json('Coupon Updated!');
     }
 
-    //delete coupon
+    //store coupon
     public function store(Request $request){
         $data=array(
             'coupon_code' =>$request->coupon_code,
