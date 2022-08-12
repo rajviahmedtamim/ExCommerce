@@ -21,6 +21,9 @@ Route::group(['namespace'=>'App\Http\Controllers\Admin', 'middleware'=>'is_admin
         Route::post('/update', 'CategoryController@update')->name('category.update');
     });
 
+    //global routes
+    Route::get('/get-child-category/{id}', 'CategoryController@GetChildCategory');
+
     //    Category Routes
     Route::group(['prefix'=>'subcategory'],function (){
         Route::get('/', 'SubcategoryController@index')->name('subcategory.index');
@@ -47,6 +50,20 @@ Route::group(['namespace'=>'App\Http\Controllers\Admin', 'middleware'=>'is_admin
         Route::get('/edit/{id}', 'BrandController@edit');
         Route::post('/update', 'BrandController@update')->name('brand.update');
     });
+
+    //product routes
+    Route::group(['prefix'=>'product'], function(){
+        Route::get('/','ProductController@index')->name('product.index');
+        Route::get('/create','ProductController@create')->name('product.create');
+        Route::post('/store','ProductController@store')->name('product.store');
+        // Route::get('/delete/{id}','BrandController@destroy')->name('brand.delete');
+//         Route::get('/edit/{id}','BrandController@edit');
+        // Route::post('/update','BrandController@update')->name('brand.update');
+        Route::get('/active-featured/{id}','ProductController@activefeatured');
+        Route::get('/not-featured/{id}','ProductController@notfeatured');
+
+    });
+
 
     //Coupon routes
     Route::group(['prefix'=>'coupon'],function (){

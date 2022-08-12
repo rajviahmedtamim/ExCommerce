@@ -40,13 +40,12 @@ class CategoryController extends Controller
         $notification=array('messege' => 'Category Inserted!', 'alert-type' => 'success');
         return redirect()->back()->with($notification);
     }
-
     //edit method
     public function edit($id){
         //$data=DB::table('categories')->where('id',$id)->first();
         $data=Category::findorfail($id);
         return response()->json($data);
-}
+    }
     //update method
     public function update(Request $request){
 //        $id=$request->id;
@@ -65,9 +64,8 @@ class CategoryController extends Controller
         return redirect()->back()->with($notification);
     }
 
-
-        //delete category methods
-public function destroy($id){
+    //delete category methods
+    public function destroy($id){
 //        query builder
 //        DB::table('categories')->where('id',$id)->delete();
 
@@ -76,7 +74,12 @@ public function destroy($id){
         $category->delete();
         $notification=array('messege' => 'Category Deleted!', 'alert-type' => 'success');
         return redirect()->back()->with($notification);
-}
+    }
 
+    //get child category
+    public function GetChildCategory($id){
+        $data=DB::table('childcategories')->where('subcategory_id',$id)->get();
+        return response()->json($data);
+    }
 
 }
