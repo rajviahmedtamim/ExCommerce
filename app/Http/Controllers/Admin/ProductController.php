@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Products;
 use Illuminate\Http\Request;
-use DB;
+//use DB;
+use Illuminate\Support\Facades\DB;
 use Image;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -23,21 +25,44 @@ class ProductController extends Controller
     public function index(Request $request){
         if ($request->ajax()) {
             $imgurl='public/files/product';
-            $data= Products::latest()->get();
-            return DataTables::of($data)
+
+            $products="";
+              $query=DB::table('products')->leftJoin('categories','products.category_id','categories.id')
+                  ->leftJoin('subcategories','products.subcategory_id','subcategories.id')
+                  ->leftJoin('brands','products.brand_id','brands.id');
+              if($request->category_id){
+                  $query->where('products.category_id',$request->category_id);
+              }
+              if($request->subcategory_id){
+                $query->where('products.subcategory_id',$request->subcategory_id);
+              }
+              if($request->brand_id){
+                $query->where('products.brand_id',$request->brand_id);
+              }
+              if($request->status==1){
+                $query->where('products.status',1);
+              }
+            if($request->status==0){
+                $query->where('products.status',0);
+            }
+
+              $product=$query->select('products.*','categories.category_name','subcategories.subcategory_name','brands.brand_name')
+                  ->get();
+
+            return DataTables::of($product)
                 ->addIndexColumn()
                 ->editColumn('thumbnail',function ($row) use($imgurl){
                     return '<img src="'.$imgurl.'/'.$row->thumbnail.'" height="30" width="30" >';
                 })
-                ->editColumn('category_name',function ($row){
-                    return $row->category->category_name;
-                })
-                ->editColumn('subcategory_name',function ($row){
-                    return $row->subcategory->subcategory_name;
-                })
-                ->editColumn('brand_name',function ($row){
-                    return $row->brand->brand_name;
-                })
+//                ->editColumn('category_name',function ($row){
+//                    return $row->category->category_name;
+//                })
+//                ->editColumn('subcategory_name',function ($row){
+//                    return $row->subcategory->subcategory_name;
+//                })
+//                ->editColumn('brand_name',function ($row){
+//                    return $row->brand->brand_name;
+//                })
                 ->editColumn('featured',function ($row){
                     if($row->featured==1){
                         return '<a href="#" data-id="'.$row->id.'" class="deactive_featured"><i class="fa fa-thumbs-down text-danger"> <span class="badge-success">deactive</span> </i></a>';
@@ -67,14 +92,18 @@ class ProductController extends Controller
                     $actionbtn='
                         <a href="#" class="btn btn-info btn-sm edit"><i class="fas fa-edit"></i></a>
                         <a href="#" class="btn btn-primary btn-sm edit"><i class="fas fa-eye"></i></a>
-                      	<a href="'.route('brand.delete',[$row->id]).'" class="btn btn-danger btn-sm"
+                      	<a href="'.route('product.delete',[$row->id]).'" class="btn btn-danger btn-sm"
                       	 id="delete"><i class="fas fa-trash"></i></a>';
                     return $actionbtn;
                 })
                 ->rawColumns(['action','category_name','subcategory_name','brand_name','thumbnail','featured','today_deal','status'])
                 ->make(true);
         }
-        return view('admin.product.index');
+//        $category=Category::all(); --Model
+        $category=DB::table('categories')->get(); //query builder
+        $subcategory=DB::table('subcategories')->get();
+        $brand=DB::table('brands')->get();
+        return view('admin.product.index',compact('category','subcategory','brand'));
     }
 
     //product create page
@@ -162,4 +191,11 @@ class ProductController extends Controller
         DB::table('products')->where('id',$id)->update(['featured'=>1]);
         return response()->json('Product Featured Activated');
     }
+    //product delete
+    //delete coupon
+    public function destroy($id){
+        DB::table('products')->where('id',$id)->delete();
+        return response()->json('Successfully Deleted!');
+    }
+
 }

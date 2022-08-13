@@ -25,6 +25,44 @@
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title">All Product list</h3>
+                            </div><br>
+                            <div class="row pl-3">
+                                <div class="form-group col-3">
+                                    <label>Category</label>
+                                    <select class="form-control submitable" name="category_id" id="category_id">
+                                        <option value="">All</option>
+                                        <@foreach($category as $row)
+                                        <option value="{{ $row->id }}">{{ $row->category_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group col-3">
+                                    <label>Sub Category</label>
+                                    <select class="form-control submitable" name="subcategory_id" id="subcategory_id">
+                                        <option value="">All</option>
+                                        <@foreach($subcategory as $row)
+                                            <option value="{{ $row->id }}">{{ $row->subcategory_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group col-3">
+                                    <label>Brand</label>
+                                    <select class="form-control submitable" name="brand_id" id="brand_id">
+                                        <option value="">All</option>
+                                        <@foreach($brand as $row)
+                                            <option value="{{ $row->id }}">{{ $row->brand_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-3">
+                                    <label>Status</label>
+                                    <select class="form-control submitable" name="status" id="status">
+                                        <option value="1">All</option>
+                                            <option value="1">Active</option>
+                                        <option value="0">Inactive</option>
+                                    </select>
+                                </div>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
@@ -65,9 +103,18 @@
     <script type="text/javascript">
         $(function childcategory(){
             table=$('.ytable').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: "{{ route('product.index') }}",
+                "processing": true,
+                "serverSide": true,
+                "searching": true,
+                "ajax": {
+                    "url": "{{ route('product.index') }}",
+                    "data": function (e) {
+                        e.category_id = $("#category_id").val();
+                        e.subcategory_id = $("#subcategory_id").val();
+                        e.brand_id = $("#brand_id").val();
+                        e.status = $("#status").val();
+                    }
+                },
                 columns : [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                     {data: 'thumbnail', name:'thumbnail'},
@@ -112,6 +159,10 @@
             });
         });
 
+    //    submitable class call for every change
+        $(document).on('change','.submitable',function (){
+            $('.ytable').DataTable().ajax.reload();
+        });
     </script>
 
 @endsection
