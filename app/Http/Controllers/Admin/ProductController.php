@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Products;
 use Illuminate\Http\Request;
@@ -42,58 +43,48 @@ class ProductController extends Controller
               if($request->status==1){
                 $query->where('products.status',1);
               }
-            if($request->status==0){
+              if($request->status==0){
                 $query->where('products.status',0);
-            }
+              }
 
-              $product=$query->select('products.*','categories.category_name','subcategories.subcategory_name','brands.brand_name')
-                  ->get();
+            $product=$query->select('products.*','categories.category_name','subcategories.subcategory_name','brands.brand_name')
+                ->get();
 
             return DataTables::of($product)
                 ->addIndexColumn()
                 ->editColumn('thumbnail',function ($row) use($imgurl){
                     return '<img src="'.$imgurl.'/'.$row->thumbnail.'" height="30" width="30" >';
                 })
-//                ->editColumn('category_name',function ($row){
-//                    return $row->category->category_name;
-//                })
-//                ->editColumn('subcategory_name',function ($row){
-//                    return $row->subcategory->subcategory_name;
-//                })
-//                ->editColumn('brand_name',function ($row){
-//                    return $row->brand->brand_name;
-//                })
                 ->editColumn('featured',function ($row){
                     if($row->featured==1){
-                        return '<a href="#" data-id="'.$row->id.'" class="deactive_featured"><i class="fa fa-thumbs-down text-danger"> <span class="badge-success">deactive</span> </i></a>';
+                        return '<a href="#" data-id="'.$row->id.'" class="deactive_featurd"><i class="fas fa-thumbs-down text-danger"></i> <span class="badge badge-success">active</span> </a>';
                     }
                     else{
-                        return '<a href="#" data-id="'.$row->id.'" class="active_featured"><i class="fa fa-thumbs-up text-success"> <span class="badge-danger">active</span></i></a>';
+                        return '<a href="#" data-id="'.$row->id.'" class="active_featurd"> <i class="fas fa-thumbs-up text-success"></i> <span class="badge badge-danger">deactive</span> </a>';
                     }
                 })
                 ->editColumn('today_deal',function ($row){
-                    if($row->today_deal==1){
-                        return '<a href=""><i class="fa fa-thumbs-down text-danger"> <span class="badge-success">active</span> </i></a>';
+                    if($row->today_deal==1) {
+                        return '<a href="#" data-id="'.$row->id.'" class="deactive_deal"><i class="fas fa-thumbs-down text-danger"></i> <span class="badge badge-success">active</span> </a>';
                     }
                     else{
-                        return '<a href=""><i class="fa fa-thumbs-up text-success"> <span class="badge-danger">deactive</span></i></a>';
+                        return '<a href="#" data-id="'.$row->id.'" class="active_deal"><i class="fas fa-thumbs-up text-success"></i> <span class="badge badge-danger">deactive</span> </a>';
                     }
                 })
                 ->editColumn('status',function ($row){
                     if($row->status==1){
-                        return '<a href=""><i class="fa fa-thumbs-down text-danger"> <span class="badge-success">active</span> </i></a>';
+                        return '<a href="#" data-id="'.$row->id.'" class="deactive_status"><i class="fas fa-thumbs-down text-danger"></i> <span class="badge badge-success">active</span> </a>';
                     }
                     else{
-                        return '<a href=""><i class="fa fa-thumbs-up text-success"> <span class="badge-danger">deactive</span></i></a>';
+                        return '<a href="#" data-id="'.$row->id.'" class="active_status"><i class="fas fa-thumbs-up text-danger"></i> <span class="badge badge-danger">deactive</span> </a>';
                     }
                 })
 
                 ->addColumn('action', function($row){
                     $actionbtn='
-                        <a href="#" class="btn btn-info btn-sm edit"><i class="fas fa-edit"></i></a>
-                        <a href="#" class="btn btn-primary btn-sm edit"><i class="fas fa-eye"></i></a>
-                      	<a href="'.route('product.delete',[$row->id]).'" class="btn btn-danger btn-sm"
-                      	 id="delete"><i class="fas fa-trash"></i></a>';
+                        <a href="#" class="btn btn-info btn-sm edit"><i class="fas fa-eye"></i></a>
+                        <a href="'.route('product.edit',[$row->id]).'" class="btn btn-primary btn-sm edit"><i class="fas fa-edit"></i></a>
+                      	<a href="'.route('product.delete',[$row->id]).'" class="btn btn-danger btn-sm" id="delete"><i class="fas fa-trash"></i></a>';
                     return $actionbtn;
                 })
                 ->rawColumns(['action','category_name','subcategory_name','brand_name','thumbnail','featured','today_deal','status'])
@@ -121,10 +112,11 @@ class ProductController extends Controller
         $validated = $request->validate([
             'name' => 'required',
             'code' => 'required|unique:products|max:55',
-//            'subcategory_id ' => 'required',
+            'subcategory_id ' => 'required',
             'brand_id' => 'required',
             'unit' => 'required',
             'selling_price' => 'required',
+            'color'=>'required',
             'description' => 'required',
         ]);
 
@@ -154,6 +146,7 @@ class ProductController extends Controller
         $data['video']=$request->video;
         $data['featured']=$request->featured;
         $data['today_deal']=$request->today_deal;
+        $data['product_slider']=$request->product_slider;
         $data['status']=$request->status;
         $data['admin_id']=Auth::id();
         $data['date']=date('d-m-y');
@@ -161,7 +154,7 @@ class ProductController extends Controller
         //single image
         if($request->thumbnail){
             $thumbnail=$request->thumbnail;
-            $photoname='slug'.'.'.$thumbnail->getClientOriginalExtension();
+            $photoname=$slug.'.'.$thumbnail->getClientOriginalExtension();
             //$photo->move('public/files/brand/',$photoname);  //Without image intervention
             Image::make($thumbnail)->resize(600,600)->save('public/files/product/'.$photoname); //image intervention
             $data['thumbnail']=$photoname;
@@ -181,6 +174,20 @@ class ProductController extends Controller
         return redirect()->back()->with($notification);
     }
 
+//    Product Edit
+    public function edit($id){
+        $product=DB::table('products')->where('id',$id)->first();
+        //$product=Product::findorfail($id);
+        $category=Category::all();
+        $brand=Brand::all();
+        $warehosue=DB::table('warehouses')->get();
+        $pickup_point=DB::table('pickup_point')->get();
+        //childcategory get_
+        $childcategory=DB::table('childcategories')->where('category_id',$product->category_id)->get();
+        // dd($childcategory);
+        return view('admin.product.edit',compact('product','category','brand','warehosue','pickup_point','childcategory'));
+    }
+
     //not featured
     public function notfeatured($id){
         DB::table('products')->where('id',$id)->update(['featured'=>0]);
@@ -191,8 +198,28 @@ class ProductController extends Controller
         DB::table('products')->where('id',$id)->update(['featured'=>1]);
         return response()->json('Product Featured Activated');
     }
+    //Deactivate Today deals
+    public function notdeal($id){
+        DB::table('products')->where('id',$id)->update(['today_deal'=>0]);
+        return response()->json('Product Today Deal Deactivated');
+    }
+    //active Today deals
+    public function activedeal($id){
+        DB::table('products')->where('id',$id)->update(['today_deal'=>1]);
+        return response()->json('Product Today Deal is Activated');
+    }
+    //Deactive Status
+    public function notstatus($id){
+        DB::table('products')->where('id',$id)->update(['status'=>0]);
+        return response()->json('Product Status Deactivated');
+    }
+    //Active Status
+    public function activestatus($id){
+        DB::table('products')->where('id',$id)->update(['status'=>1]);
+        return response()->json('Product Status Activated');
+    }
+
     //product delete
-    //delete coupon
     public function destroy($id){
         DB::table('products')->where('id',$id)->delete();
         return response()->json('Successfully Deleted!');

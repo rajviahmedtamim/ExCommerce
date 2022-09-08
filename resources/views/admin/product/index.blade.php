@@ -11,7 +11,7 @@
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <button class="btn btn-primary" data-toggle="modal" data-target="#addModal"> + Add New</button>
+                            <a href="{{ url('/product/create')}}" class="btn btn-primary"> + Add New</a>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -58,8 +58,8 @@
                                 <div class="form-group col-3">
                                     <label>Status</label>
                                     <select class="form-control submitable" name="status" id="status">
-                                        <option value="1">All</option>
-                                            <option value="1">Active</option>
+                                        <option >All</option>
+                                        <option value="1">Active</option>
                                         <option value="0">Inactive</option>
                                     </select>
                                 </div>
@@ -131,8 +131,8 @@
             });
         });
 
-        //deactivate featured
-        $('body').on('click','.deactive_featured', function(){
+        //Deactivate featured
+        $('body').on('click','.deactive_featurd', function(){
             let id=$(this).data('id');
             var url = "{{ url('product/not-featured') }}/"+id;
             $.ajax({
@@ -145,8 +145,8 @@
             });
         });
 
-        //activate featured
-        $('body').on('click','.active_featured', function(){
+        //Activate featured
+        $('body').on('click','.active_featurd', function(){
             let id=$(this).data('id');
             var url = "{{ url('product/active-featured') }}/"+id;
             $.ajax({
@@ -159,7 +159,64 @@
             });
         });
 
-    //    submitable class call for every change
+        //Deactivate Deal
+        $('body').on('click','.deactive_deal', function(){
+            let id=$(this).data('id');
+            var url = "{{ url('product/not-deal') }}/"+id;
+            $.ajax({
+                url:url,
+                type:'get',
+                success: function (data){
+                    toastr.success(data);
+                    table.ajax.reload();
+                }
+            });
+        });
+
+        //Activate Deal
+        $('body').on('click','.active_deal', function(){
+            let id=$(this).data('id');
+            var url = "{{ url('product/active-deal') }}/"+id;
+            $.ajax({
+                url:url,
+                type:'get',
+                success: function (data){
+                    toastr.success(data);
+                    table.ajax.reload();
+                }
+            });
+        });
+
+        //Deactivate Status
+        $('body').on('click','.deactive_status', function(){
+            let id=$(this).data('id');
+            var url = "{{ url('product/not-status') }}/"+id;
+            $.ajax({
+                url:url,
+                type:'get',
+                success: function (data){
+                    toastr.success(data);
+                    table.ajax.reload();
+                }
+            });
+        });
+
+        //Activate Status
+        $('body').on('click','.active_status', function(){
+            let id=$(this).data('id');
+            var url = "{{ url('product/active-status') }}/"+id;
+            $.ajax({
+                url:url,
+                type:'get',
+                success: function (data){
+                    toastr.success(data);
+                    table.ajax.reload();
+                }
+            });
+        });
+
+
+        //    submitable class call for every change
         $(document).on('change','.submitable',function (){
             $('.ytable').DataTable().ajax.reload();
         });

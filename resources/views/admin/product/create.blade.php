@@ -122,7 +122,7 @@
                                     <div class="row">
                                         <div class="form-group col-lg-4">
                                             <label for="exampleInput">Purchase Price  </label>
-                                            <input type="text" class="form-control" {{ old('purchase_price') }} name="purchase_price">
+                                            <input type="text" class="form-control" value="{{ old('purchase_price') }}" name="purchase_price">
                                         </div>
                                         <div class="form-group col-lg-4">
                                             <label for="exampleInput">Selling Price <span class="text-danger">*</span> </label>

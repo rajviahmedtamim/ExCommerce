@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Route;
 
 
+Route::get('/login',function(){
+    return redirect()->to('/');
+})->name('login');
+
 Route::get('/admin-login', [App\Http\Controllers\Auth\LoginController::class, 'AdminLogin'])->name('admin.login');
 //Route::get('/admin/home', [App\Http\Controllers\HomeController::class, 'AdminIndex'])->name('admin.home')->middleware('is_admin');
 
@@ -57,10 +61,14 @@ Route::group(['namespace'=>'App\Http\Controllers\Admin', 'middleware'=>'is_admin
         Route::get('/create','ProductController@create')->name('product.create');
         Route::post('/store','ProductController@store')->name('product.store');
          Route::get('/delete/{id}','ProductController@destroy')->name('product.delete');
-//         Route::get('/edit/{id}','BrandController@edit');
+         Route::get('/edit/{id}','ProductController@edit')->name('product.edit');
         // Route::post('/update','BrandController@update')->name('brand.update');
         Route::get('/active-featured/{id}','ProductController@activefeatured');
         Route::get('/not-featured/{id}','ProductController@notfeatured');
+        Route::get('/active-deal/{id}','ProductController@activedeal');
+        Route::get('/not-deal/{id}','ProductController@notdeal');
+        Route::get('/active-status/{id}','ProductController@activestatus');
+        Route::get('/not-status/{id}','ProductController@notstatus');
     });
 
 
